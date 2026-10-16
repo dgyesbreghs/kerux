@@ -3,6 +3,7 @@
 from ._errors import HandlerAlreadyRegisteredError, HandlerNotFoundError, KeruxError
 from ._mediator import Mediator
 from ._messages import Notification, Request
+from ._sync_mediator import SyncMediator
 
 __all__ = [
     "HandlerAlreadyRegisteredError",
@@ -11,4 +12,5 @@ __all__ = [
     "Mediator",
     "Notification",
     "Request",
+    "SyncMediator",
 ]
