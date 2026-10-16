@@ -60,7 +60,7 @@ class _BehaviorEntry:
         return self.request_type is None or isinstance(request, self.request_type)
 
 
-def _invoke(target: object, *args: object) -> Any:
+def invoke(target: object, *args: object) -> Any:
     """Calls ``target.handle(*args)`` if it has a ``handle`` method, otherwise ``target(*args)``."""
     handle = getattr(target, "handle", None)
     if callable(handle):

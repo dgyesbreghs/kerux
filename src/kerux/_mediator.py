@@ -6,7 +6,7 @@ from typing import Any, TypeVar, cast
 
 from ._errors import HandlerNotFoundError
 from ._messages import Notification, Request
-from ._registry import Registry, _invoke
+from ._registry import Registry, invoke
 
 __all__ = ["Mediator"]
 
@@ -35,7 +35,7 @@ class Mediator(Registry):
 
         async def call_handler() -> Any:
             # Resolved only when the pipeline gets here, so a short-circuiting behavior never creates it.
-            return await _await_if_needed(_invoke(self._resolve(entry, "handler"), request))
+            return await _await_if_needed(invoke(self._resolve(entry, "handler"), request))
 
         next_step: Callable[[], Awaitable[Any]] = call_handler
         for behavior in reversed(self._behaviors):
@@ -50,11 +50,13 @@ class Mediator(Registry):
         The first handler that raises stops the rest. Publishing without handlers does nothing.
         """
         for entry in self._notification_handlers.get(type(notification), ()):
-            await _await_if_needed(_invoke(self._resolve(entry, "notification handler"), notification))
+            await _await_if_needed(invoke(self._resolve(entry, "notification handler"), notification))
 
     @staticmethod
-    def _wrap(behavior: object, request: object, next_step: Callable[[], Awaitable[Any]]) -> Callable[[], Awaitable[Any]]:
+    def _wrap(
+        behavior: object, request: object, next_step: Callable[[], Awaitable[Any]]
+    ) -> Callable[[], Awaitable[Any]]:
         async def step() -> Any:
-            return await _await_if_needed(_invoke(behavior, request, next_step))
+            return await _await_if_needed(invoke(behavior, request, next_step))
 
         return step

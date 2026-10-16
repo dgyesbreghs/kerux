@@ -6,7 +6,7 @@ from typing import Any, TypeVar, cast
 
 from ._errors import HandlerNotFoundError
 from ._messages import Notification, Request
-from ._registry import Registry, _invoke
+from ._registry import Registry, invoke
 
 __all__ = ["SyncMediator"]
 
@@ -52,7 +52,7 @@ class SyncMediator(Registry):
         def call_handler() -> Any:
             # Resolved only when the pipeline gets here, so a short-circuiting behavior never creates it.
             handler = self._resolve(entry, "handler")
-            return _ensure_sync_result(_invoke(handler, request), handler)
+            return _ensure_sync_result(invoke(handler, request), handler)
 
         next_step: Callable[[], Any] = call_handler
         for behavior in reversed(self._behaviors):
@@ -68,7 +68,7 @@ class SyncMediator(Registry):
         """
         for entry in self._notification_handlers.get(type(notification), ()):
             handler = self._resolve(entry, "notification handler")
-            _ensure_sync_result(_invoke(handler, notification), handler)
+            _ensure_sync_result(invoke(handler, notification), handler)
 
     def _validate(self, target: object, kind: str) -> None:
         if _is_async(target):
@@ -79,6 +79,6 @@ class SyncMediator(Registry):
     @staticmethod
     def _wrap(behavior: object, request: object, next_step: Callable[[], Any]) -> Callable[[], Any]:
         def step() -> Any:
-            return _ensure_sync_result(_invoke(behavior, request, next_step), behavior)
+            return _ensure_sync_result(invoke(behavior, request, next_step), behavior)
 
         return step

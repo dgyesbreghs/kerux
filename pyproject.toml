@@ -58,15 +58,18 @@ filterwarnings = ["error"]
 [tool.ruff]
 line-length = 120
 target-version = "py311"
+extend-exclude = ["*.md"]
 
 [tool.ruff.lint]
 select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
 
 [tool.mypy]
 strict = true
+warn_unused_ignores = true
 python_version = "3.11"
 
 [tool.pyright]
 include = ["src", "tests/typing_checks.py"]
 pythonVersion = "3.11"
 typeCheckingMode = "strict"
+reportUnnecessaryTypeIgnoreComment = "error"
