@@ -1,0 +1,72 @@
+[project]
+name = "kerux"
+version = "0.1.0"
+description = "Minimal in-process mediator for Python: requests, notifications and pipeline behaviors. Async first, fully typed."
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Dylan Gyesbreghs" }]
+requires-python = ">=3.11"
+dependencies = []
+keywords = ["mediator", "cqrs", "asyncio", "fastapi", "request", "handler", "notification", "pipeline"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Framework :: AsyncIO",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/dgyesbreghs/kerux"
+Repository = "https://github.com/dgyesbreghs/kerux"
+Issues = "https://github.com/dgyesbreghs/kerux/issues"
+
+[build-system]
+requires = ["hatchling>=1.26"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/kerux"]
+
+[tool.hatch.build.targets.sdist]
+include = ["src/kerux", "tests", "README.md", "LICENSE"]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-asyncio>=0.24",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "pyright>=1.1.380",
+    "fastapi>=0.110",
+    "httpx>=0.27",
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+filterwarnings = ["error"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM", "RUF"]
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+
+[tool.pyright]
+include = ["src", "tests/typing_checks.py"]
+pythonVersion = "3.11"
+typeCheckingMode = "strict"
