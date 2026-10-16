@@ -104,7 +104,10 @@ A notification can have any number of handlers, registered with `register_notifi
 A behavior wraps every request. Call `next()` to continue to the next behavior or the handler, or return early to short-circuit:
 
 ```python
-async def logging_behavior(request: Any, next: Callable[[], Awaitable[Any]]) -> Any:
+from kerux import Next
+
+
+async def logging_behavior(request: object, next: Next) -> Any:
     log.info("Handling %s", type(request).__name__)
     response = await next()
     log.info("Handled %s", type(request).__name__)
@@ -114,6 +117,8 @@ async def logging_behavior(request: Any, next: Callable[[], Awaitable[Any]]) -> 
 mediator.add_behavior(logging_behavior)  # every request
 mediator.add_behavior(validation_behavior, request_type=Validatable)  # only isinstance(request, Validatable)
 ```
+
+A behavior added without `request_type` receives every request, so type checkers require it to accept any request (`request: object` or `Any`). Narrow its parameter, e.g. `request: Validatable`, only together with `request_type=Validatable`.
 
 Behaviors run in the order added; the first one is the outermost. They also run for `Request[None]` requests, with `None` as the response. A behavior can also be an object with a `handle(request, next)` method.
 

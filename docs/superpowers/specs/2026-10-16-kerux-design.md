@@ -122,7 +122,7 @@ def get_mediator(db: Session = Depends(get_db)) -> Mediator:
     return mediator
 ```
 
-Building a mediator is cheap (a few dictionary inserts), and FastAPI's `yield` dependencies take care of cleanup. The FastAPI example demonstrates this pattern next to a module-level mediator for handlers without request-scoped state. Async factories, context-manager factories and DI integrations are deferred until the author's project shows what it needs. *(Builder's call, from the review.)*
+Building a mediator is cheap (a few dictionary inserts), and FastAPI's `yield` dependencies take care of cleanup. The FastAPI example demonstrates this pattern, with stateless handlers registered as plain functions in the same per-request mediator. *(Changed during the build: two mediators side by side read as confusing.)* Async factories, context-manager factories and DI integrations are deferred until the author's project shows what it needs. *(Builder's call, from the review.)*
 
 ### Typing of registration
 `send`/`publish` must be strictly typed (see the anti-goals). For registration, type checkers verify that the handler accepts the registered request type. They do not verify that its return type matches the request's response type: Python's type system can't link the two without heavy overloads, and that would fight the "small" anti-goal. *(Builder's call, from the review.)*

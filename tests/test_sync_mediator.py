@@ -179,3 +179,14 @@ def test_accepts_object_with_sync_handle_even_if_call_is_async() -> None:
     mediator.register(Echo, Both())
 
     assert mediator.send(Echo("x")) == "handled"
+
+
+def test_mock_handler_is_called() -> None:
+    from unittest.mock import Mock
+
+    handler = Mock(return_value="mocked")
+    mediator = SyncMediator()
+    mediator.register(Echo, handler)
+
+    assert mediator.send(Echo("x")) == "mocked"
+    handler.assert_called_once_with(Echo("x"))

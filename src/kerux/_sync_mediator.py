@@ -6,7 +6,7 @@ from typing import Any, TypeVar, cast
 
 from ._errors import HandlerNotFoundError
 from ._messages import Notification, Request
-from ._registry import Registry, invoke
+from ._registry import Registry, handle_method, invoke
 
 __all__ = ["SyncMediator"]
 
@@ -15,8 +15,8 @@ ResponseT = TypeVar("ResponseT")
 
 def _is_async(target: object) -> bool:
     """Whether what kerux would call on the target (its ``handle`` method, otherwise itself) is a coroutine function."""
-    handle = getattr(target, "handle", None)
-    if callable(handle):
+    handle = handle_method(target)
+    if handle is not None:
         return inspect.iscoroutinefunction(handle)
     call = getattr(target, "__call__", None)  # noqa: B004
     return inspect.iscoroutinefunction(target) or inspect.iscoroutinefunction(call)

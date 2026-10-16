@@ -279,3 +279,14 @@ async def test_decorated_handlers_are_dispatched() -> None:
         return request.text * 2
 
     assert await mediator.send(Echo("ab")) == "abab"
+
+
+async def test_async_mock_handler_is_called() -> None:
+    from unittest.mock import AsyncMock
+
+    handler = AsyncMock(return_value="mocked")
+    mediator = Mediator()
+    mediator.register(Echo, handler)
+
+    assert await mediator.send(Echo("x")) == "mocked"
+    handler.assert_awaited_once_with(Echo("x"))

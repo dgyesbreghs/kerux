@@ -1,9 +1,9 @@
 """Static typing checks, verified by mypy and pyright (not collected by pytest)."""
 
 from dataclasses import dataclass
-from typing import assert_type
+from typing import Any, assert_type
 
-from kerux import Mediator, Notification, Request, SyncMediator
+from kerux import Mediator, Next, Notification, Request, SyncMediator
 
 
 @dataclass
@@ -82,3 +82,21 @@ async def check_decorators() -> None:
     # Decorators return the function unchanged, types included.
     assert_type(await decorated(GetUser(1)), User)
     assert_type(await explicit(GetUser(1)), User)
+
+
+async def narrow_behavior(request: GetUser, next: Next) -> Any:
+    return await next()
+
+
+async def broad_behavior(request: object, next: Next) -> Any:
+    return await next()
+
+
+def check_behaviors() -> None:
+    mediator = Mediator()
+    mediator.add_behavior(broad_behavior)
+    mediator.add_behavior(lambda request, next: next())
+    mediator.add_behavior(narrow_behavior, request_type=GetUser)
+
+    # A behavior that only accepts GetUser can't be registered for every request.
+    mediator.add_behavior(narrow_behavior)  # type: ignore[arg-type]
