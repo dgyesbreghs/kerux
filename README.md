@@ -1,3 +1,5 @@
+<p align="center"><img src="https://raw.githubusercontent.com/dgyesbreghs/kerux/main/assets/icon-512.png" width="112" alt="kerux icon"></p>
+
 # kerux
 
 [![CI](https://github.com/dgyesbreghs/kerux/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/dgyesbreghs/kerux/actions/workflows/ci.yml)
