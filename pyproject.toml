@@ -1,6 +1,6 @@
 [project]
 name = "kerux"
-version = "0.1.0"
+version = "0.1.1"
 description = "Minimal in-process mediator for Python: requests, notifications and pipeline behaviors. Async first, fully typed."
 readme = "README.md"
 license = "MIT"
